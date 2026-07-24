@@ -81,6 +81,11 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .ex-card.core .tip-box{border-color:#e4d8f0}
 .tip-icon{font-size:13px;flex-shrink:0;margin-top:1px}
 .tip-text{font-size:11.5px;color:#777;line-height:1.5;font-style:italic}
+.gym-box{background:#fff;border-radius:8px;padding:8px 11px;margin-top:9px;display:flex;gap:7px;align-items:flex-start;border:1px solid var(--sage-light)}
+.gym-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.gym-text{font-size:11.5px;color:#4d7355;line-height:1.5}
+.gym-text strong{color:#3a6142}
+.gym-banner{background:var(--sage-light);color:#3a6142;text-align:center;font-size:11px;letter-spacing:.2px;padding:8px 14px;font-weight:500}
 .rest-content{padding:4px 0 8px}
 .rest-icon{font-size:32px;margin-bottom:8px;text-align:center}
 .rest-title{font-family:'Lora',serif;font-size:17px;color:#4a7a9b;margin-bottom:10px;text-align:center}
@@ -111,6 +116,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
     <span class="goal-chip">🧘 Soft Shoulders</span>
     <span class="goal-chip">🔥 Fat Loss</span>
     <span class="goal-chip">🦢 Better Posture</span>
+    <span class="goal-chip">🏋️ Gym-Friendly</span>
   </div>
   <div class="pb-wrap"><div class="pb-fill" id="pb" style="width:0%"></div></div>
   <div class="pb-lbl" id="pbl">0 / 30 days completed</div>
@@ -123,6 +129,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
   <div class="week-tab" onclick="showWeek(4,this)">Week 4</div>
 </div>
 
+<div class="gym-banner">🏋️ Every exercise below includes a gym-equipment alternative</div>
 <div class="days-container" id="dc"></div>
 
 <div class="footer">
@@ -281,7 +288,7 @@ const P = [
   {n:"Side-Lying Hip Abduction (Recovery)",sets:"2 sets × 10 reps each side",type:"recovery",steps:["Very light, slow — maintenance only.","Make each rep take 4 full seconds.","Feel the outer hip engagement without straining."],tip:""},
   {n:"Full Shoulder & Chest Stretch",sets:"10 minutes",type:"stretch",steps:["Cross-body shoulder stretch: 45 sec each arm.","Chest opener (clasped hands behind back): 45 seconds.","Pendulum swings: 30 sec each arm.","Cobra: 2 × 45 seconds.","Finish: 10 slow backward shoulder rolls and breathe."],tip:"You are 3 weeks in. Your body deserves this care."},
   {n:"Kneeling Hip Flexor Stretch",sets:"3 × 45 seconds each side",type:"stretch",steps:["Long hold today — recovery day means more time for deep stretching.","Kneeling lunge. Tuck pelvis under. Torso tall. Breathe deeply.","45 seconds each side × 3 rounds.","After 3 weeks of consistent hip flexor stretching, you should feel a real difference in how your hips sit."],tip:""},
-]},{day:"Rest Day",type:"Complete Rest",dur:"",rest:true},
+]},{day:21,week:3,title:"Rest Day",type:"Complete Rest",dur:"",rest:true},
 
 // === WEEK 4 ===
 {day:22,week:4,title:"Glute Hypertrophy Day",type:"Max Glute Effort",dur:"45 min",ex:[
@@ -357,6 +364,42 @@ function upd() {
   document.getElementById('pbl').textContent = done.length + ' / 30 days completed';
 }
 
+const GYM_ALT_RULES = [
+  [/treadmill/i, "Use a gym treadmill (set the incline as noted), or the StairMaster/stepmill for extra glute drive."],
+  [/mindful walk/i, "Walk laps on the indoor track, or an easy flat treadmill walk."],
+  [/march in place/i, "Warm up on a stationary bike, elliptical, or the treadmill at an easy flat pace for the same time."],
+  [/sumo squat/i, "Hold a dumbbell or kettlebell at your chest for a Goblet Sumo Squat, or use the cable machine / Smith machine for added load."],
+  [/glute bridge/i, "Rest a barbell (with a pad) across your hips for a Barbell Glute Bridge, or use a glute bridge/hip thrust machine."],
+  [/donkey kick/i, "Use the cable machine with an ankle cuff for a Cable Donkey Kick, or a glute kickback machine."],
+  [/hip flexor/i, "No equipment needed — use a mat in the stretching area. A yoga block under your back knee adds cushioning."],
+  [/bird-dog/i, "Bodyweight is best here — use a gym mat. Add light ankle weights once it feels easy."],
+  [/dead bug/i, "Do it on a mat or a flat bench. Add light ankle weights for extra challenge."],
+  [/pallof press/i, "Set a cable pulley at chest height and press straight out, standing sideways to the stack — a Cable Pallof Press."],
+  [/shoulder shrug/i, "No equipment needed, or hold a pair of light dumbbells for the shrug — same movement."],
+  [/seated spine twist/i, "Sit on a bench or mat; holding a light medicine ball while you rotate adds gentle resistance."],
+  [/fire hydrant/i, "Use the cable machine with an ankle cuff for a Cable Fire Hydrant, or the hip abductor machine."],
+  [/abduction/i, "Use the seated Hip Abductor machine, or the cable machine with an ankle cuff for a standing cable abduction."],
+  [/cat-cow/i, "No equipment needed on a mat; a stability ball under your torso adds support if available."],
+  [/pendulum/i, "No equipment needed, or hold a light dumbbell for gentle added traction through the shoulder."],
+  [/pull-apart/i, "Use the cable machine for a Seated Cable Face Pull, or the reverse pec-deck on a light weight."],
+  [/shoulder stretch|full shoulder|cross-body/i, "No equipment needed, or use a squat rack post/door frame for a deeper doorway chest stretch."],
+  [/clamshell/i, "Use the hip abductor machine (clamshell position), or a light resistance loop from the accessory rack."],
+  [/cobra/i, "No equipment needed, or use a stability ball for a supported Cobra, or the back-extension bench."],
+  [/hip circle/i, "No equipment needed — mobility only."],
+  [/reverse lunge/i, "Hold a pair of dumbbells at your sides, or use the Smith machine for added load."],
+  [/standing side kick/i, "Use the cable machine with an ankle cuff for a Standing Cable Hip Abduction, or the hip abductor machine's standing attachment."],
+  [/hip thrust/i, "Use a flat bench and a barbell (with a pad) for a Barbell Hip Thrust, or a hip thrust/glute drive machine."],
+  [/posture check|posture reset|full posture stretch/i, "No special equipment — just a quiet mat area for the full stretch sequence."],
+];
+
+function gymAltFor(name) {
+  const hits = [];
+  GYM_ALT_RULES.forEach(([re, text]) => {
+    if (re.test(name) && !hits.includes(text)) hits.push(text);
+  });
+  return hits.length ? hits.join('  \u2022  ') : "Bodyweight works fine — ask a gym staff member if you'd like a machine that targets the same movement.";
+}
+
 function typeClass(t) {
   if (t === 'stretch') return 'stretch';
   if (t === 'recovery') return 'recovery';
@@ -401,6 +444,7 @@ function renderDay(day) {
       const tipHTML = e.tip
         ? `<div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">${e.tip}</div></div>`
         : '';
+      const gymHTML = `<div class="gym-box"><div class="gym-icon">🏋️</div><div class="gym-text"><strong>At the gym:</strong> ${gymAltFor(e.n)}</div></div>`;
       return `<div class="ex-card ${tc}">
         <div class="ex-header">
           <div class="ex-name">${e.n}</div>
@@ -410,6 +454,7 @@ function renderDay(day) {
         <div class="how-label">How to do it</div>
         <div class="steps">${stepsHTML}</div>
         ${tipHTML}
+        ${gymHTML}
       </div>`;
     }).join('');
 
